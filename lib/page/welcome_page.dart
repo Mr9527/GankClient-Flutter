@@ -11,34 +11,35 @@ class WelcomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
-  bool hadInit = false;
+class _WelcomePageState extends State<WelcomePage>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (hadInit) {
-      return;
-    }
-    hadInit = true;
-//    new Future.delayed(const Duration(seconds: 2, milliseconds: 500), () {});
+  void initState() {
+    super.initState();
+    //创建AnimationController
+    controller = new AnimationController(
+        vsync: this, duration: Duration(milliseconds: 3000));
+    controller.addListener((){});
   }
-
-  String imageUrl = "";
 
   @override
   Widget build(BuildContext context) {
+    var mediaSize = MediaQuery.of(context).size;
     return new Container(
       color: Colors.white,
       child: FutureBuilder<String>(
           future: _getImageUrl(),
           builder: (context, result) {
             if (result.data != null) {
-              return Image.network(result.data,
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.fill);
+              controller.forward();
+              return ScaleTransition(
+                  scale: new Tween(begin: 1.0, end: 1.2).animate(controller),
+                  child: Image.network(result.data,
+                      width: mediaSize.width,
+                      height: mediaSize.height,
+                      fit: BoxFit.fill));
             } else {
               return Container();
             }
@@ -67,5 +68,11 @@ class _WelcomePageState extends State<WelcomePage> {
               attribute.indexOf("'") + 1, attribute.lastIndexOf("'"));
       return url;
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller?.dispose();
   }
 }
