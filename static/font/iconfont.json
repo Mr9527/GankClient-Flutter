@@ -1,0 +1,37 @@
+{
+  "id": "1727952",
+  "name": "common",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "通用的矢量图标库",
+  "glyphs": [
+    {
+      "icon_id": "7008886",
+      "name": "add",
+      "font_class": "add",
+      "unicode": "e6df",
+      "unicode_decimal": 59103
+    },
+    {
+      "icon_id": "7008930",
+      "name": "enter",
+      "font_class": "enter",
+      "unicode": "e6f8",
+      "unicode_decimal": 59128
+    },
+    {
+      "icon_id": "7008971",
+      "name": "more",
+      "font_class": "more",
+      "unicode": "e710",
+      "unicode_decimal": 59152
+    },
+    {
+      "icon_id": "7008997",
+      "name": "return",
+      "font_class": "return",
+      "unicode": "e720",
+      "unicode_decimal": 59168
+    }
+  ]
+}
