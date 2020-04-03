@@ -152,12 +152,44 @@ class CommonUtils {
   static pushTheme(Store store, int index) {
     ThemeData themeData;
     List<Color> colors = getThemeListColor();
-    themeData = getThemeData(colors[index]);
+    themeData = getThemeData(index);
     store.dispatch(new RefreshThemeDataAction(themeData));
   }
 
-  static getThemeData(Color color) {
-    return ThemeData(primarySwatch: color, platform: TargetPlatform.android);
+  static getThemeData(index) {
+    switch (index) {
+      case 0:
+        var lightTheme = ThemeData(
+            brightness: Brightness.light, textTheme: lightThemeData());
+        return lightTheme;
+      case 1:
+        var darkTheme = ThemeData(
+            brightness: Brightness.dark,
+            primarySwatch: Colors.blue,
+            textTheme: darkThemeData());
+        return darkTheme;
+       /* return ThemeData.lerp( ThemeData(
+          iconTheme: IconThemeData(color: Colors.blue),
+          primarySwatch:Colors.blue,
+          accentColor:Colors.blue[500],
+          toggleableActiveColor:Colors.blue[500],
+          textSelectionHandleColor:Colors.blue[300],
+        ),darkTheme, 0.1);*/
+//        return darkTheme;
+
+    }
+    return ThemeData.dark();
+  }
+
+  static lightThemeData() {
+    return TextTheme(
+        display1: GankTextStyle.normalText, display2: GankTextStyle.middleText);
+  }
+
+  static darkThemeData() {
+    return TextTheme(
+        display1: GankTextStyle.normalTextWhite,
+        display2: GankTextStyle.middleTextWhite);
   }
 
   ///获取设备信息

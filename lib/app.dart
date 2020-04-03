@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gankclient/event/http_error_event.dart';
 import 'package:gankclient/net/code.dart';
+import 'package:gankclient/page/home_page.dart';
 import 'package:gankclient/page/welcome_page.dart';
 import 'package:gankclient/redux/application_state.dart';
 import 'package:gankclient/style/style.dart';
@@ -39,6 +40,9 @@ class _ReduxApplicationState extends State<Application> with HttpErrorListener {
               ScreenUtil.init(context,
                   width: 750, height: 1334, allowFontScaling: false);
               return WelcomePage();
+            },
+            HomePage.sName: (context) {
+              return HomePage();
             }
           });
         }));

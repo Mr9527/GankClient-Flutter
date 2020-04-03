@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 ///颜色
 class ThemeColors {
-
   static const int primaryIntValue = 0xFFFDCF00;
 
   static const MaterialColor primarySwatch = const MaterialColor(
@@ -22,12 +21,12 @@ class ThemeColors {
     },
   );
 
-
   static const Color primaryValue = Color(0xFF24292E);
   static const Color primaryLightValue = Color(0xFF42464b);
   static const Color primaryDarkValue = Color(0xFF121917);
 
   static const Color divider = Color(0xFFEEEEEE);
+  static const Color label = Color(0xFF448ef6);
   static const Color normalBackground = Color(0xFFF4F1F4);
   static const Color mainTitleBackground = Color(0xFF262a36);
   static const Color enableNormal = Color(0xFFD2D2D2);
@@ -52,7 +51,6 @@ class ThemeColors {
 
 ///文本样式
 class GankTextStyle {
-
   static bigTextSize() => 36.sp;
 
   static lagerTextSize() => 32.sp;
@@ -166,7 +164,6 @@ class GankTextStyle {
     fontWeight: FontWeight.bold,
   );
 
-
   static TextStyle normalTextLight = TextStyle(
     color: ThemeColors.primaryLightValue,
     fontSize: normalTextSize(),
@@ -209,6 +206,14 @@ class GankTextStyle {
 
 class GankIcons {
   static const String FONT_FAMILY = 'common';
-  static const IconData enter = const IconData(0xe6f8, fontFamily: GankIcons.FONT_FAMILY);
-  static const IconData back = const IconData(0xe720, fontFamily: GankIcons.FONT_FAMILY);
+
+  static const IconData home =
+      const IconData(0xe6b8, fontFamily: GankIcons.FONT_FAMILY);
+  static const IconData homeFill =
+      const IconData(0xe6bb, fontFamily: GankIcons.FONT_FAMILY);
+
+  static const IconData news =
+      const IconData(0xe7e8, fontFamily: GankIcons.FONT_FAMILY);
+  static const IconData newsFill =
+      const IconData(0xe7e7, fontFamily: GankIcons.FONT_FAMILY);
 }

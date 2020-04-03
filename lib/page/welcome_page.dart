@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gankclient/net/address.dart';
 import 'package:gankclient/net/api.dart';
+import 'package:gankclient/utils/navigator_utils.dart';
 import 'package:html/dom.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -21,7 +22,12 @@ class _WelcomePageState extends State<WelcomePage>
     //创建AnimationController
     controller = new AnimationController(
         vsync: this, duration: Duration(milliseconds: 3000));
-    controller.addListener((){});
+    controller.addListener(() {});
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        NavigatorUtils.goHome(context);
+      }
+    });
   }
 
   @override

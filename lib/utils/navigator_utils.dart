@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gankclient/page/home_page.dart';
 
 /// 导航栏
 /// Created by guoshuyu
@@ -37,7 +38,7 @@ class NavigatorUtils {
 
   ///主页
   static goHome(BuildContext context) {
-//    Navigator.pushReplacementNamed(context, HomePage.sName);
+    Navigator.pushReplacementNamed(context, HomePage.sName);
   }
 
   ///登录页
