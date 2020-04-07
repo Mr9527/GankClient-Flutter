@@ -22,7 +22,7 @@ class ErrorInterceptors extends InterceptorsWrapper {
     if (connectivityResult == ConnectivityResult.none) {
       return _dio.resolve(new ResultData(
           Code.errorHandleFunction(Code.NETWORK_ERROR, "", false),
-          false, code: Code.NETWORK_ERROR));
+          false, status: Code.NETWORK_ERROR));
     }
     return options;
   }

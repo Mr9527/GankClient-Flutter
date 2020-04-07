@@ -33,7 +33,7 @@ class Code {
           response.data["message"] != null) {
         var code = response.data["code"];
         return ResultData(response.data["data"], code == 1,
-            code: code, message: response.data["message"]);
+            status: code);
       }
       return ResultData(response.data, true);
     } else if (response.data is DioError) {
@@ -44,7 +44,7 @@ class Code {
           errorHandleFunction(
               response.statusCode, response.statusMessage, noTip),
           false,
-          code: response.statusCode);
+          status: response.statusCode);
     }
   }
 
@@ -59,10 +59,10 @@ class Code {
       var code = response.data["code"];
       return ResultData(
           errorHandleFunction(code, response.data["message"], noTip), code == 1,
-          code: code, message: response.data["message"]);
+          status: code);
     }
     return new ResultData(
         errorHandleFunction(response.statusCode, error.message, noTip), false,
-        code: response.statusCode);
+        status: response.statusCode);
   }
 }

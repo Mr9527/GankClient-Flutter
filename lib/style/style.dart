@@ -28,7 +28,10 @@ class ThemeColors {
   static const Color divider = Color(0xFFEEEEEE);
   static const Color label = Color(0xFF448ef6);
   static const Color normalBackground = Color(0xFFF4F1F4);
+  static const Color darkNormalBackground = Color(0xFF131313);
   static const Color mainTitleBackground = Color(0xFF262a36);
+  static const Color darkCardBackground = Color(0xFF1d2021);
+  static const Color lightCardBackground = Color(0xFFFFFFFF);
   static const Color enableNormal = Color(0xFFD2D2D2);
   static const Color unused = Color(0xFFD2D2D2);
   static const Color white = Color(0xFFFFFFFF);

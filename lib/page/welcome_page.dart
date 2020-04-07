@@ -59,7 +59,7 @@ class _WelcomePageState extends State<WelcomePage>
       "id": "1"
     };
     var response = await httpManager.client().request(
-        Address.randomGirlHtmlUrl(),
+        API.randomGirlHtmlUrl(),
         data: map,
         options: HttpManager.fromHtmlOptions());
 
@@ -69,7 +69,7 @@ class _WelcomePageState extends State<WelcomePage>
       var element = dom.querySelector(".media-content");
       var attribute = element.attributes["style"];
       var url;
-      url = Address.domain +
+      url = API.domain +
           attribute.toString().substring(
               attribute.indexOf("'") + 1, attribute.lastIndexOf("'"));
       return url;

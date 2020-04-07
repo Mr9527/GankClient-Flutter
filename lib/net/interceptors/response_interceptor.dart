@@ -15,7 +15,7 @@ class ResponseInterceptors extends InterceptorsWrapper {
     } catch (e) {
       print(e.toString() + option.path);
       value = new ResultData(response.data, false,
-          code: response.statusCode, message: response.statusMessage);
+          status: response.statusCode);
     }
     return value;
   }

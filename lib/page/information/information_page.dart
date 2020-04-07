@@ -2,9 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gankclient/model/banner_model.dart';
+import 'package:gankclient/page/information/InformationBloc.dart';
 import 'package:gankclient/redux/application_state.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:gankclient/utils/common_utils.dart';
+import 'package:gankclient/widget/banner_widget.dart';
+import 'package:provider/provider.dart';
 
 class InformationPage extends StatefulWidget {
   InformationPage({Key key}) : super(key: key);
@@ -17,6 +21,8 @@ class InformationPageState extends State<InformationPage>
     with
         AutomaticKeepAliveClientMixin<InformationPage>,
         WidgetsBindingObserver {
+  final InformationBloc bloc = new InformationBloc();
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -24,11 +30,35 @@ class InformationPageState extends State<InformationPage>
       body: Container(
           child: Column(
         children: <Widget>[
+          _banner(),
           _card(),
           FlatButton(onPressed: _switchThemes, child: Text("切换主题"))
         ],
       )),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!bloc.requested) {
+      bloc.requestRefresh();
+    }
+    super.didChangeDependencies();
+  }
+
+  _banner() {
+    return StreamBuilder<List<BannerModel>>(
+        stream: bloc.stream,
+        builder: (context, snapShot) {
+          if (snapShot != null && snapShot.data != null) {
+            return BannerWidget(
+                bannerDataList: snapShot.data,
+                looperDuration: Duration(seconds: 5),
+                listener: (model) {});
+          } else {
+            return Container();
+          }
+        });
   }
 
   var status = 0;

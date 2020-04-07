@@ -27,7 +27,7 @@ dependencies:
   # App 目录提供
   path_provider: ^1.4.0
   # json convert object
-  json_annotation: ^2.0.0
+  json_annotation: ^3.0.1
   # 网络请求
   dio: ^3.0.7
   # 状态共享
@@ -68,7 +68,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  built_value_generator: 6.8.2
+  build_runner: ^1.7.2
+  json_serializable: ^3.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

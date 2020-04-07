@@ -160,15 +160,22 @@ class CommonUtils {
     switch (index) {
       case 0:
         var lightTheme = ThemeData(
-            brightness: Brightness.light, textTheme: lightThemeData());
+            backgroundColor: ThemeColors.normalBackground,
+            brightness: Brightness.light,
+            textTheme: lightThemeData(),
+            cardTheme: cardThemeData(false));
         return lightTheme;
       case 1:
         var darkTheme = ThemeData(
-            brightness: Brightness.dark,
-            primarySwatch: Colors.blue,
-            textTheme: darkThemeData());
+          backgroundColor: ThemeColors.darkNormalBackground,
+          brightness: Brightness.dark,
+          primarySwatch: Colors.blue,
+          accentColor: Colors.blue[500],
+          textTheme: darkThemeData(),
+          cardTheme: cardThemeData(true),
+        );
         return darkTheme;
-       /* return ThemeData.lerp( ThemeData(
+      /* return ThemeData.lerp( ThemeData(
           iconTheme: IconThemeData(color: Colors.blue),
           primarySwatch:Colors.blue,
           accentColor:Colors.blue[500],
@@ -183,13 +190,23 @@ class CommonUtils {
 
   static lightThemeData() {
     return TextTheme(
-        display1: GankTextStyle.normalText, display2: GankTextStyle.middleText);
+        display1: GankTextStyle.normalText,
+        display2: GankTextStyle.middleText,
+        display3: GankTextStyle.smallSubText);
   }
 
   static darkThemeData() {
     return TextTheme(
         display1: GankTextStyle.normalTextWhite,
-        display2: GankTextStyle.middleTextWhite);
+        display2: GankTextStyle.middleTextWhite,
+        display3: GankTextStyle.smallSubLightText);
+  }
+
+  static cardThemeData(isDark) {
+    return CardTheme(
+        color: isDark
+            ? ThemeColors.darkCardBackground
+            : ThemeColors.lightCardBackground);
   }
 
   ///获取设备信息

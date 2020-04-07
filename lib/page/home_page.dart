@@ -5,8 +5,10 @@ import 'package:android_intent/android_intent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gankclient/page/information_page.dart';
+import 'package:gankclient/page/home_drawer_page.dart';
+import 'package:gankclient/page/information/information_page.dart';
 import 'package:gankclient/style/style.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   static final String sName = "home";
@@ -34,21 +36,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _tabLayout() {
+    var textStyle = Theme.of(context).textTheme.display3;
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
             icon: Icon(GankIcons.home),
             activeIcon: Icon(GankIcons.homeFill),
-            title: Text("首页",
-                style:
-                    TextStyle(fontSize: 14, color: ThemeColors.mainTextColor))),
+            title: Text("首页", style: textStyle)),
         BottomNavigationBarItem(
             icon: Icon(GankIcons.news),
             activeIcon: Icon(GankIcons.newsFill),
-            title: Text("资讯",
-                style:
-                    TextStyle(fontSize: 14, color: ThemeColors.mainTextColor)))
+            title: Text("资讯", style: textStyle))
       ],
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
@@ -78,6 +77,7 @@ class _HomePageState extends State<HomePage> {
           return _dialogExitApp(context);
         },
         child: Scaffold(
+          drawer: HomeDrawerPage(),
           resizeToAvoidBottomPadding: true,
           body: _pageView(),
           bottomNavigationBar: _tabLayout(),
