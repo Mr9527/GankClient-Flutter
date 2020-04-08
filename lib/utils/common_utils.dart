@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gankclient/config/config.dart';
+import 'package:gankclient/local/local_storage.dart';
 import 'package:gankclient/style/strings.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:gankclient/utils/navigator_utils.dart';
@@ -150,20 +152,20 @@ class CommonUtils {
   }
 
   static pushTheme(Store store, int index) {
+    LocalStorage.save(Config.THEME_COLOR, index);
     ThemeData themeData;
-    List<Color> colors = getThemeListColor();
     themeData = getThemeData(index);
     store.dispatch(new RefreshThemeDataAction(themeData));
   }
 
   static getThemeData(index) {
+    var lightTheme = ThemeData(
+        backgroundColor: ThemeColors.normalBackground,
+        brightness: Brightness.light,
+        textTheme: lightThemeData(),
+        cardTheme: cardThemeData(false));
     switch (index) {
       case 0:
-        var lightTheme = ThemeData(
-            backgroundColor: ThemeColors.normalBackground,
-            brightness: Brightness.light,
-            textTheme: lightThemeData(),
-            cardTheme: cardThemeData(false));
         return lightTheme;
       case 1:
         var darkTheme = ThemeData(
@@ -175,31 +177,28 @@ class CommonUtils {
           cardTheme: cardThemeData(true),
         );
         return darkTheme;
-      /* return ThemeData.lerp( ThemeData(
-          iconTheme: IconThemeData(color: Colors.blue),
-          primarySwatch:Colors.blue,
-          accentColor:Colors.blue[500],
-          toggleableActiveColor:Colors.blue[500],
-          textSelectionHandleColor:Colors.blue[300],
-        ),darkTheme, 0.1);*/
-//        return darkTheme;
-
     }
-    return ThemeData.dark();
+    return lightTheme;
   }
 
   static lightThemeData() {
     return TextTheme(
+        title: GankTextStyle.largeText,
+        subtitle: GankTextStyle.middleSubText,
+        subhead: GankTextStyle.smallSubText,
         display1: GankTextStyle.normalText,
         display2: GankTextStyle.middleText,
-        display3: GankTextStyle.smallSubText);
+        display3: GankTextStyle.smallText);
   }
 
   static darkThemeData() {
     return TextTheme(
+        title: GankTextStyle.largeTextWhite,
+        subtitle: GankTextStyle.middleSubLightText,
+        subhead: GankTextStyle.smallSubLightText,
         display1: GankTextStyle.normalTextWhite,
         display2: GankTextStyle.middleTextWhite,
-        display3: GankTextStyle.smallSubLightText);
+        display3: GankTextStyle.smallTextWhite);
   }
 
   static cardThemeData(isDark) {

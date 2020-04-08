@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gankclient/config/config.dart';
 import 'package:gankclient/event/http_error_event.dart';
+import 'package:gankclient/local/local_storage.dart';
 import 'package:gankclient/net/code.dart';
 import 'package:gankclient/page/home_page.dart';
 import 'package:gankclient/page/welcome_page.dart';
@@ -15,6 +18,7 @@ import 'package:redux/redux.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'event/index.dart';
+import 'localization/gsy_localizations_delegate.dart';
 
 class Application extends StatefulWidget {
   @override
@@ -22,20 +26,29 @@ class Application extends StatefulWidget {
 }
 
 class _ReduxApplicationState extends State<Application> with HttpErrorListener {
-  final store = new Store<ApplicationState>(
-    appReducer,
-    middleware: middleware,
-    initialState: new ApplicationState(
-        themeData: CommonUtils.getThemeData(ThemeColors.primarySwatch)),
-  );
+  Store<ApplicationState> store;
 
   @override
   Widget build(BuildContext context) {
     // 使用 redux 状态共享时，最上层必须为 StoreProvider
     return new StoreProvider(
-        store: store,
+        store: store = new Store<ApplicationState>(
+          appReducer,
+          middleware: middleware,
+          initialState: new ApplicationState(
+              themeData: CommonUtils.getThemeData(
+                  LocalStorage.get(Config.THEME_COLOR) ?? 0)),
+        ),
         child: new StoreBuilder<ApplicationState>(builder: (context, store) {
-          return new MaterialApp(theme: store.state.themeData, routes: {
+          return new MaterialApp(
+              theme: store.state.themeData,
+              ///多语言实现代理
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GSYLocalizationsDelegate.delegate,
+              ],
+              routes: {
             WelcomePage.sName: (context) {
               ScreenUtil.init(context,
                   width: 750, height: 1334, allowFontScaling: false);

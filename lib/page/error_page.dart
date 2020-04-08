@@ -34,14 +34,11 @@ class ErrorPageState extends State<ErrorPage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Container(
       color: ThemeColors.primaryValue,
       child: new Center(
         child: Container(
           alignment: Alignment.center,
-          width: width,
-          height: width,
           decoration: new BoxDecoration(
             color: Colors.white.withAlpha(30),
             gradient:
@@ -49,7 +46,7 @@ class ErrorPageState extends State<ErrorPage> {
               Colors.white.withAlpha(10),
               ThemeColors.primaryValue.withAlpha(100),
             ]),
-            borderRadius: BorderRadius.all(Radius.circular(width / 2)),
+            borderRadius: BorderRadius.all(Radius.circular(400 / 2)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -68,6 +65,7 @@ class ErrorPageState extends State<ErrorPage> {
               ),
               new SizedBox(
                 height: 40,
+                child: Text(widget.errorMessage),
               ),
               new Row(
                 mainAxisSize: MainAxisSize.max,

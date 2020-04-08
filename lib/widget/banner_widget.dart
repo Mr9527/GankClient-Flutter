@@ -47,8 +47,8 @@ class _BannerState extends State<BannerWidget> {
   /// pagination 的计数器
   Widget _numberIndicator() {
     return Positioned(
-        top: 0.0,
-        right: 0.0,
+        top: 15.0,
+        right: 15.0,
         child: Container(
           decoration: BoxDecoration(
               color: Colors.black45, borderRadius: BorderRadius.circular(20.0)),
@@ -85,7 +85,7 @@ class _BannerState extends State<BannerWidget> {
     var indicators = new List<Widget>();
     for (int i = 0; i < widget.bannerDataList.length; i++) {
       var item = Container(
-        width: i == virtualIndex ? 30.w : 25.w,
+        width: i == virtualIndex ? 35.w : 25.w,
         height: 3.0,
         margin: EdgeInsets.symmetric(vertical: 10.w, horizontal: 2.w),
         decoration: BoxDecoration(
@@ -152,14 +152,14 @@ class _BannerState extends State<BannerWidget> {
 
   _buildItemTitle(String title) {
     return Container(
-      /* decoration: BoxDecoration(
+       decoration: BoxDecoration(
         /// 背景的渐变色
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
           end: const Alignment(0.0, -0.8),
           colors: [const Color(0xa0000000), Colors.transparent],
         ),
-      ),*/
+      ),
       alignment: Alignment.bottomCenter,
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 22.0, horizontal: 16.0),

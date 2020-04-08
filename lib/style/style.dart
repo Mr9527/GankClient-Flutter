@@ -54,17 +54,17 @@ class ThemeColors {
 
 ///文本样式
 class GankTextStyle {
-  static bigTextSize() => 36.sp;
+  static bigTextSize() => 23.0;
 
-  static lagerTextSize() => 32.sp;
+  static lagerTextSize() =>  30.0;
 
-  static normalTextSize() => 30.sp;
+  static normalTextSize() => 18.0;
 
-  static middleTextWhiteSize() => 28.sp;
+  static middleTextWhiteSize() =>16.0;
 
-  static smallTextSize() => 24.sp;
+  static smallTextSize() => 14.0;
 
-  static minTextSize() => 22.sp;
+  static minTextSize() => 12.0;
 
   static TextStyle minText = TextStyle(
     color: ThemeColors.subLightTextColor,
@@ -209,6 +209,7 @@ class GankTextStyle {
 
 class GankIcons {
   static const String FONT_FAMILY = 'common';
+  static const String HOME_AUTHOR_LABEL_ICON_URL = 'https://gank.io/images/8edfa6bca6c643b3ba3f7cec56780377';
 
   static const IconData home =
       const IconData(0xe6b8, fontFamily: GankIcons.FONT_FAMILY);

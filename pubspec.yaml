@@ -64,6 +64,14 @@ dependencies:
   flutter_screenutil: ^1.1.0
   # html dom 解析
   html: ^0.14.0+3
+  # fla 动画
+  flare_flutter: ^1.8.3
+  # 好看的加载动画
+  flutter_spinkit: ^4.1.1+1
+  # markdown
+  markdown: ^2.1.3
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
