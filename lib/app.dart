@@ -35,20 +35,18 @@ class _ReduxApplicationState extends State<Application> with HttpErrorListener {
         store: store = new Store<ApplicationState>(
           appReducer,
           middleware: middleware,
-          initialState: new ApplicationState(
-              themeData: CommonUtils.getThemeData(
-                  LocalStorage.get(Config.THEME_COLOR) ?? 0)),
+          initialState:
+              new ApplicationState(themeData: CommonUtils.getThemeData(0)),
         ),
         child: new StoreBuilder<ApplicationState>(builder: (context, store) {
-          return new MaterialApp(
-              theme: store.state.themeData,
+          return new MaterialApp(theme: store.state.themeData,
+
               ///多语言实现代理
               localizationsDelegates: [
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GSYLocalizationsDelegate.delegate,
-              ],
-              routes: {
+              ], routes: {
             WelcomePage.sName: (context) {
               ScreenUtil.init(context,
                   width: 750, height: 1334, allowFontScaling: false);

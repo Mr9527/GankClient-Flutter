@@ -7,8 +7,11 @@ import 'package:gankclient/utils/common_utils.dart';
 
 class ArticleListItem extends StatelessWidget {
   final ArticleModel model;
+  final int index;
+  final Function(int index, ArticleModel model) onTap;
 
-  const ArticleListItem({Key key, this.model}) : super(key: key);
+  const ArticleListItem({Key key, this.index, this.model, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,11 @@ class ArticleListItem extends StatelessWidget {
             child: Card(
                 elevation: 1,
                 child: InkWell(
-                  onTap: (){},
+                  onTap: () {
+                    if (onTap != null) {
+                      onTap(index, model);
+                    }
+                  },
                   child: Container(
                       margin: EdgeInsets.all(10.w),
                       child: _content(context, model)),

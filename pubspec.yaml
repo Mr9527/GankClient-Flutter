@@ -41,7 +41,7 @@ dependencies:
   #
   url_launcher: 5.4.1
   # webView
-  webview_flutter: ^0.3.19+8
+  webview_flutter: ^0.3.19+9
   # 字体
   google_fonts: 0.3.9
   # toast
@@ -68,8 +68,12 @@ dependencies:
   flare_flutter: ^1.8.3
   # 好看的加载动画
   flutter_spinkit: ^4.1.1+1
-  # markdown
+  # markdown 解析
   markdown: ^2.1.3
+  # markdown  视图
+  flutter_markdown: ^0.3.4
+  # webView 扩张
+  flutter_webview_plugin: ^0.3.11
   flutter_localizations:
     sdk: flutter
 

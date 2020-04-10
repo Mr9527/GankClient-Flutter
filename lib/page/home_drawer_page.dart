@@ -20,7 +20,13 @@ class HomeDrawerPage extends StatefulWidget {
 }
 
 class _HomeDrawerPageState extends State<HomeDrawerPage> {
-  var status = LocalStorage.get(Config.THEME_COLOR);
+  int status;
+
+  @override
+  void initState() {
+    super.initState();
+    readConfig();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,8 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
           top: 25.w,
           right: 0,
           child: IconButton(
-              icon: NativeImage(status==0?"light_logo":"dark_logo"), onPressed: _switchThemes)),
+              icon: NativeImage(status == 0 ? "light_logo" : "dark_logo"),
+              onPressed: _switchThemes)),
       Padding(
           padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 200.w),
           child: SizedBox(width: 540.w, height: 160.w, child: Card())),
@@ -97,11 +104,17 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
 
   _switchThemes() {
     var store = StoreProvider.of<ApplicationState>(context);
-    CommonUtils.pushTheme(store, status == 0 ? status = 1 : status = 0);
+    status = status == 0 ? 1 : 0;
+    CommonUtils.pushTheme(store, status);
     setState(() {});
   }
 
   _listClick(int index) {
     Fluttertoast.showToast(msg: index.toString());
+  }
+
+  void readConfig() async {
+    var themeStatus = await LocalStorage.get(Config.THEME_COLOR);
+    status=int.parse(themeStatus);
   }
 }

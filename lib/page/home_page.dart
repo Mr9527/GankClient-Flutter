@@ -5,8 +5,11 @@ import 'package:android_intent/android_intent.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gankclient/page/category/category_page.dart';
+import 'package:gankclient/page/girl/girl_page.dart';
 import 'package:gankclient/page/home_drawer_page.dart';
 import 'package:gankclient/page/information/information_page.dart';
+import 'package:gankclient/page/personal/personal_center_page.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -36,27 +39,40 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _tabLayout() {
-    var textStyle = Theme.of(context).textTheme.display3;
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-            icon: Icon(GankIcons.home),
-            activeIcon: Icon(GankIcons.homeFill),
-            title: Text("首页", style: textStyle)),
-        BottomNavigationBarItem(
-            icon: Icon(GankIcons.news),
-            activeIcon: Icon(GankIcons.newsFill),
-            title: Text("资讯", style: textStyle))
-      ],
+      items: navigationItems(),
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
     );
   }
 
+  List<BottomNavigationBarItem> navigationItems() {
+    var textStyle = Theme.of(context).textTheme.display3;
+    return <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+          icon: Icon(GankIcons.home),
+          activeIcon: Icon(GankIcons.homeFill),
+          title: Text("首页", style: textStyle)),
+      BottomNavigationBarItem(
+          icon: Icon(GankIcons.search),
+          activeIcon: Icon(GankIcons.searchFill),
+          title: Text("发现", style: textStyle)),
+      BottomNavigationBarItem(
+          icon: Icon(GankIcons.girl),
+          activeIcon: Icon(GankIcons.girlFill),
+          title: Text("妹纸", style: textStyle)),
+      BottomNavigationBarItem(
+          icon: Icon(GankIcons.my),
+          activeIcon: Icon(GankIcons.myFill),
+          title: Text("我的", style: textStyle)),
+    ];
+  }
+
+/*
   Widget _pageView() {
     return PageView(
-        children: <Widget>[InformationPage(key: informationPageKey)],
+        children: _pageChildren(),
         scrollDirection: Axis.horizontal,
         reverse: false,
         controller: _pageController,
@@ -64,6 +80,14 @@ class _HomePageState extends State<HomePage> {
         // 禁止滑动
         physics: new NeverScrollableScrollPhysics());
   }
+*/
+
+  List<Widget> _pageChildren() => <Widget>[
+        CategoryPage(),
+        InformationPage(key: informationPageKey),
+        GirlPage(),
+        PersonalCenterPage(),
+      ];
 
   @override
   void initState() {
@@ -79,13 +103,15 @@ class _HomePageState extends State<HomePage> {
         child: Scaffold(
           drawer: HomeDrawerPage(),
           resizeToAvoidBottomPadding: true,
-          body: _pageView(),
+          body: IndexedStack(
+            index: _selectedIndex,
+            children: _pageChildren(),
+          ),
           bottomNavigationBar: _tabLayout(),
         ));
   }
 
   void _onItemTapped(int position) {
-    _pageController.jumpTo(MediaQuery.of(context).size.width * position);
     setState(() {
       _selectedIndex = position;
     });

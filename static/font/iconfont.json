@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4197490",
+      "name": "girl_shoes_line",
+      "font_class": "girl_shoes_line",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "4217911",
+      "name": "girl_shoes",
+      "font_class": "girl_shoes",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "11349167",
+      "name": "search-l",
+      "font_class": "search-l",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "11349210",
+      "name": "search-f",
+      "font_class": "search-f",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
       "icon_id": "29924",
       "name": "check",
       "font_class": "check",

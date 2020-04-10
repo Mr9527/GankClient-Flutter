@@ -152,7 +152,7 @@ class CommonUtils {
   }
 
   static pushTheme(Store store, int index) {
-    LocalStorage.save(Config.THEME_COLOR, index);
+    LocalStorage.save(Config.THEME_COLOR, index.toString());
     ThemeData themeData;
     themeData = getThemeData(index);
     store.dispatch(new RefreshThemeDataAction(themeData));

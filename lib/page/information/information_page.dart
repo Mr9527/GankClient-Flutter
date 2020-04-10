@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gankclient/model/article_model.dart';
 import 'package:gankclient/model/banner_model.dart';
+import 'package:gankclient/page/gank_article_detail/gank_article_detail_page.dart';
 import 'package:gankclient/page/information/InformationBloc.dart';
 import 'package:gankclient/redux/application_state.dart';
 import 'package:gankclient/style/style.dart';
@@ -39,7 +40,13 @@ class InformationPageState extends State<InformationPage>
       bloc.pullLoadWidgetControl,
       (context, index) {
         if (bloc.dataList != null && bloc.dataList.length > 0) {
-          return ArticleListItem(model: bloc.dataList[index]);
+          return ArticleListItem(
+            index: index,
+            model: bloc.dataList[index],
+            onTap: (index, model) {
+              pushPage(context, GankArticleDetailPage(indexModel: model));
+            },
+          );
         } else {
           return Container();
         }
@@ -74,6 +81,11 @@ class InformationPageState extends State<InformationPage>
       },
     );
     return Scaffold(body: Container(child: content));
+  }
+
+  void pushPage(BuildContext context, Widget page, {String pageName}) {
+    if (context == null || page == null) return;
+    Navigator.push(context, CupertinoPageRoute<void>(builder: (ctx) => page));
   }
 
   /* Column(

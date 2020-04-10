@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:gankclient/config/config.dart';
+import 'package:gankclient/local/local_storage.dart';
 import 'package:gankclient/net/address.dart';
 import 'package:gankclient/net/api.dart';
+import 'package:gankclient/redux/application_state.dart';
+import 'package:gankclient/utils/common_utils.dart';
 import 'package:gankclient/utils/navigator_utils.dart';
 import 'package:html/dom.dart';
 
@@ -54,14 +59,22 @@ class _WelcomePageState extends State<WelcomePage>
   }
 
   Future<String> _getImageUrl() async {
+    var store = StoreProvider.of<ApplicationState>(context);
+    var themeColor = await LocalStorage.get(Config.THEME_COLOR);
+    var index = int.parse(themeColor ?? 0);
+    var storeBrightness = index == 0 ? Brightness.light : Brightness.dark;
+    if (Theme.of(context).brightness != storeBrightness) {
+      CommonUtils.pushTheme(store, index);
+      return null;
+    }
+
+    readTheme();
     Map<String, dynamic> map = {
       "action": "ajax_refresh_random_post",
       "id": "1"
     };
-    var response = await httpManager.client().request(
-        API.randomGirlHtmlUrl(),
-        data: map,
-        options: HttpManager.fromHtmlOptions());
+    var response = await httpManager.client().request(API.randomGirlHtmlUrl(),
+        data: map, options: HttpManager.fromHtmlOptions());
 
     if (response.statusCode >= 200 && response.statusCode <= 300) {
       var htmlString = response.data;
@@ -80,5 +93,9 @@ class _WelcomePageState extends State<WelcomePage>
   void dispose() {
     super.dispose();
     controller?.dispose();
+  }
+
+  void readTheme() async {
+
   }
 }

@@ -220,4 +220,21 @@ class GankIcons {
       const IconData(0xe7e8, fontFamily: GankIcons.FONT_FAMILY);
   static const IconData newsFill =
       const IconData(0xe7e7, fontFamily: GankIcons.FONT_FAMILY);
+
+  static const IconData search =
+      const IconData(0xe647, fontFamily: GankIcons.FONT_FAMILY);
+  static const IconData searchFill =
+      const IconData(0xe64e, fontFamily: GankIcons.FONT_FAMILY);
+
+  static const IconData girl =
+      const IconData(0xe609, fontFamily: GankIcons.FONT_FAMILY);
+  static const IconData girlFill =
+      const IconData(0xe60f, fontFamily: GankIcons.FONT_FAMILY);
+
+  static const IconData my =
+      const IconData(0xe7d5, fontFamily: GankIcons.FONT_FAMILY);
+  static const IconData myFill =
+      const IconData(0xe7d9, fontFamily: GankIcons.FONT_FAMILY);
+
+
 }
