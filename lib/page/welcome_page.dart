@@ -61,7 +61,7 @@ class _WelcomePageState extends State<WelcomePage>
   Future<String> _getImageUrl() async {
     var store = StoreProvider.of<ApplicationState>(context);
     var themeColor = await LocalStorage.get(Config.THEME_COLOR);
-    var index = int.parse(themeColor ?? 0);
+    var index = int.parse(themeColor ?? "0");
     var storeBrightness = index == 0 ? Brightness.light : Brightness.dark;
     if (Theme.of(context).brightness != storeBrightness) {
       CommonUtils.pushTheme(store, index);
