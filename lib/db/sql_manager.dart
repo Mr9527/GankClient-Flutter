@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
 
-
-
 class SqlManager {
   static const _VERSION = 1;
 
@@ -14,16 +12,16 @@ class SqlManager {
 
   ///初始化
   static init() async {
-   /* // open the database
+    // open the database
     var databasesPath = await getDatabasesPath();
-    var userRes = await UserDao.getUserInfoLocal();
     String dbName = _NAME;
+    /*  var userRes = await UserDao.getUserInfoLocal();
     if (userRes != null && userRes.result) {
       UserInfo user = userRes.data;
       if (user != null && user.id != null) {
         dbName = user.id.toString() + "_" + _NAME;
       }
-    }
+    }*/
     String path = databasesPath + dbName;
     if (Platform.isIOS) {
       path = databasesPath + "/" + dbName;
@@ -32,7 +30,7 @@ class SqlManager {
         onCreate: (Database db, int version) async {
       // When creating the db, create the table
       //await db.execute("CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)");
-    });*/
+    });
   }
 
   /// 表是否存在

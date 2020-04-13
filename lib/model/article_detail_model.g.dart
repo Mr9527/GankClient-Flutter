@@ -33,7 +33,8 @@ ArticleDetailModel _$ArticleDetailModelFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$ArticleDetailModelToJson(ArticleDetailModel instance) => <String, dynamic>{
+Map<String, dynamic> _$ArticleDetailModelToJson(ArticleDetailModel instance) =>
+    <String, dynamic>{
       '_id': instance.id,
       'author': instance.author,
       'category': instance.category,

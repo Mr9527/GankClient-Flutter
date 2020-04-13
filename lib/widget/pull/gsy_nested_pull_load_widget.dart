@@ -35,7 +35,6 @@ class GSYNestedPullLoadWidget<T> extends StatefulWidget {
 }
 
 class _GSYNestedPullLoadWidgetState extends State<GSYNestedPullLoadWidget> {
-
   @override
   void initState() {
     super.initState();
@@ -48,7 +47,7 @@ class _GSYNestedPullLoadWidgetState extends State<GSYNestedPullLoadWidget> {
     ///是否需要头部
     if (control.needHeader) {
       ///如果需要头部，用Item 0 的 Widget 作为ListView的头部
-      ///列表数量大于0时，因为头部和底部加载更多选项，需要对列表数据总数+2
+      ///列表数量大于0时，因为头部和底部加载更多选项，需要对列表数据总数+1
       return (control.dataList.length > 0)
           ? control.dataList.length + 1
           : control.dataList.length + 1;
@@ -63,6 +62,21 @@ class _GSYNestedPullLoadWidgetState extends State<GSYNestedPullLoadWidget> {
           ? control.dataList.length + 1
           : control.dataList.length;
     }
+  }
+
+  _lockToAwait() async {
+    ///if loading, lock to await
+    doDelayed() async {
+      await Future.delayed(Duration(seconds: 1)).then((_) async {
+        if (widget.control.isLoading) {
+          return await doDelayed();
+        } else {
+          return null;
+        }
+      });
+    }
+
+    await doDelayed();
   }
 
   ///根据配置状态返回实际列表渲染Item
@@ -100,8 +114,8 @@ class _GSYNestedPullLoadWidgetState extends State<GSYNestedPullLoadWidget> {
           onNotification: (ScrollNotification notification) {
             if (notification.metrics.pixels >=
                 notification.metrics.maxScrollExtent) {
-              if (widget.control.needLoadMore && !widget.control.isLoading) {
-                widget.onLoadMore?.call();
+              if (widget.control.needLoadMore) {
+                handleLoadMore();
               }
             }
             return false;
@@ -123,8 +137,44 @@ class _GSYNestedPullLoadWidgetState extends State<GSYNestedPullLoadWidget> {
       ),
 
       ///下拉刷新触发，返回的是一个Future
-      onRefresh: widget.onRefresh,
+      onRefresh: handleRefresh,
     );
+  }
+
+  @protected
+  Future<Null> handleRefresh() async {
+    if (widget.control.isLoading) {
+      if (isRefreshing) {
+        return null;
+      }
+
+      ///if loading, lock to await
+      await _lockToAwait();
+    }
+    widget.control.isLoading = true;
+    isRefreshing = true;
+    await widget.onRefresh?.call();
+    isRefreshing = false;
+    widget.control.isLoading = false;
+    return null;
+  }
+
+  @protected
+  Future<Null> handleLoadMore() async {
+    if (widget.control.isLoading) {
+      if (isLoadMoring) {
+        return null;
+      }
+
+      ///if loading, lock to await
+      await _lockToAwait();
+    }
+    isLoadMoring = true;
+    widget.control.isLoading = true;
+    await widget.onLoadMore?.call();
+    isLoadMoring = false;
+    widget.control.isLoading = false;
+    return null;
   }
 
   ///空页面
@@ -184,4 +234,8 @@ class _GSYNestedPullLoadWidgetState extends State<GSYNestedPullLoadWidget> {
       ),
     );
   }
+
+  bool isRefreshing = false;
+
+  bool isLoadMoring = false;
 }

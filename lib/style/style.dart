@@ -26,6 +26,7 @@ class ThemeColors {
   static const Color primaryDarkValue = Color(0xFF121917);
 
   static const Color divider = Color(0xFFEEEEEE);
+  static const Color dividerGrey = Color(0xFFaeaeae);
   static const Color label = Color(0xFF448ef6);
   static const Color normalBackground = Color(0xFFF4F1F4);
   static const Color darkNormalBackground = Color(0xFF131313);

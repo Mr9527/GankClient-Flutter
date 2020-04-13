@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -261,7 +262,7 @@ class CommonUtils {
   }
 
   ///弹出 dialog
-  static Future<T> showGSYDialog<T>({
+  static Future<T> showCommonDialog<T>({
     @required BuildContext context,
     bool barrierDismissible = true,
     WidgetBuilder builder,
@@ -277,5 +278,10 @@ class CommonUtils {
                   .copyWith(textScaleFactor: 1),
               child: new SafeArea(child: builder(context)));
         });
+  }
+
+  static void pushPage(BuildContext context, Widget page, {String pageName}) {
+    if (context == null || page == null) return;
+    Navigator.push(context, CupertinoPageRoute<void>(builder: (ctx) => page));
   }
 }

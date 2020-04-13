@@ -12,10 +12,17 @@ class InformationBloc {
   bool _requested = false;
 
   ///是否已经请求过
-  bool get requested => _requested;
+  bool get requested {
+    if (!_requested) {
+      _requested = true;
+      return false;
+    }
+    return true;
+  }
+
 
   final GSYPullLoadWidgetControl pullLoadWidgetControl =
-      new GSYPullLoadWidgetControl();
+  new GSYPullLoadWidgetControl();
 
   int page = 1;
 

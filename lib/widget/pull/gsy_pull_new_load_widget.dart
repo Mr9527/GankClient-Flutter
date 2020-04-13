@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:gankclient/localization/default_localizations.dart';
+import 'package:provider/provider.dart';
 import 'gsy_refresh_sliver.dart' as IOS;
 
 import 'custom_bouncing_scroll_physics.dart';
@@ -14,7 +15,8 @@ const double iosRefreshIndicatorExtent = 100;
 ///通用下上刷新控件
 class GSYPullLoadWidget extends StatefulWidget {
   ///item渲染
-  final IndexedWidgetBuilder itemBuilder;
+  final Widget Function(BuildContext context, int index, dynamic data)
+      itemBuilder;
 
   ///加载更多回调
   final RefreshCallback onLoadMore;
@@ -92,9 +94,9 @@ class _GSYPullLoadWidgetState extends State<GSYPullLoadWidget>
     ///是否需要头部
     if (widget.control.needHeader) {
       ///如果需要头部，用Item 0 的 Widget 作为ListView的头部
-      ///列表数量大于0时，因为头部和底部加载更多选项，需要对列表数据总数+2
+      ///列表数量大于0时，因为头部和底部加载更多选项，需要对列表数据总数+1
       return (widget.control.dataList.length > 0)
-          ? widget.control.dataList.length + 2
+          ? widget.control.dataList.length + 1
           : widget.control.dataList.length + 1;
     } else {
       ///如果不需要头部，在没有数据时，固定返回数量1用于空页面呈现
@@ -121,13 +123,12 @@ class _GSYPullLoadWidgetState extends State<GSYPullLoadWidget>
         widget.control.dataList.length != 0) {
       ///如果需要头部，并且数据不为0，当index等于实际渲染长度 - 1时，渲染加载更多Item（因为index是从0开始）
       return _buildProgressIndicator();
-    } else if (!widget.control.needHeader &&
-        widget.control.dataList.length == 0) {
+    } else if (widget.control.dataList.length == 0) {
       ///如果不需要头部，并且数据为0，渲染空页面
       return _buildEmpty();
     } else {
       ///回调外部正常渲染Item，如果这里有需要，可以直接返回相对位置的index
-      return widget.itemBuilder(context, index);
+      return widget.itemBuilder(context, index, widget.control.dataList[index]);
     }
   }
 
@@ -187,73 +188,72 @@ class _GSYPullLoadWidgetState extends State<GSYPullLoadWidget>
     if (widget.userIos) {
       ///用ios模式的下拉刷新
       return new NotificationListener(
-        onNotification: (ScrollNotification notification) {
-          ///通知 CupertinoSliverRefreshControl 当前的拖拽状态
-          sliverRefreshKey.currentState.notifyScrollNotification(notification);
-          return false;
-        },
-        child: CustomScrollView(
-          controller: _scrollController,
+          onNotification: (ScrollNotification notification) {
+            ///通知 CupertinoSliverRefreshControl 当前的拖拽状态
+            sliverRefreshKey.currentState
+                .notifyScrollNotification(notification);
+            return false;
+          },
+          child: CustomScrollView(
+              controller: _scrollController,
 
-          ///回弹效果
-          physics: const CustomBouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-              refreshHeight: iosRefreshHeight),
-          slivers: <Widget>[
-            ///控制显示刷新的 CupertinoSliverRefreshControl
-            IOS.CupertinoSliverRefreshControl(
-              key: sliverRefreshKey,
-              refreshIndicatorExtent: iosRefreshIndicatorExtent,
-              refreshTriggerPullDistance: iosRefreshHeight,
-              onRefresh: handleRefresh,
-              builder: buildSimpleRefreshIndicator,
-            ),
-            SliverSafeArea(
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return _getItem(index);
-                  },
-                  childCount: _getListCount(),
+              ///回弹效果
+              physics: const CustomBouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                  refreshHeight: iosRefreshHeight),
+              slivers: <Widget>[
+                ///控制显示刷新的 CupertinoSliverRefreshControl
+                IOS.CupertinoSliverRefreshControl(
+                  key: sliverRefreshKey,
+                  refreshIndicatorExtent: iosRefreshIndicatorExtent,
+                  refreshTriggerPullDistance: iosRefreshHeight,
+                  onRefresh: handleRefresh,
+                  builder: buildSimpleRefreshIndicator,
                 ),
-              ),
-            ),
-          ],
-        ),
-      );
+                SliverSafeArea(
+                    sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return _getItem(index);
+                    },
+                    childCount: _getListCount(),
+                  ),
+                ))
+              ]));
     }
 
     return new RefreshIndicator(
-      ///GlobalKey，用户外部获取RefreshIndicator的State，做显示刷新
-      key: widget.refreshKey,
 
-      ///下拉刷新触发，返回的是一个Future
-      onRefresh: handleRefresh,
-      child: new ListView.builder(
-        ///保持ListView任何情况都能滚动，解决在RefreshIndicator的兼容问题。
-        physics: const AlwaysScrollableScrollPhysics(),
+        ///GlobalKey，用户外部获取RefreshIndicator的State，做显示刷新
+        key: widget.refreshKey,
 
-        ///根据状态返回子孔健
-        itemBuilder: (context, index) {
-          return _getItem(index);
-        },
+        ///下拉刷新触发，返回的是一个Future
+        onRefresh: handleRefresh,
+        child: new ListView.builder(
+          ///保持ListView任何情况都能滚动，解决在RefreshIndicator的兼容问题。
+          physics: const AlwaysScrollableScrollPhysics(),
 
-        ///根据状态返回数量
-        itemCount: _getListCount(),
+          ///根据状态返回子孔健
+          itemBuilder: (context, index) {
+            return _getItem(index);
+          },
 
-        ///滑动监听
-        controller: _scrollController,
-      ),
-    );
+          ///根据状态返回数量
+          itemCount: _getListCount(),
+
+          ///滑动监听
+          controller: _scrollController,
+        ));
   }
 
   ///空页面
   Widget _buildEmpty() {
     return new Container(
-      height: MediaQuery.of(context).size.height - 100,
+      alignment: Alignment.center,
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Padding(padding: EdgeInsets.only(top: 250)),
           FlatButton(
             onPressed: () {},
             child: new Icon(
@@ -351,8 +351,6 @@ class _GSYPullLoadWidgetState extends State<GSYPullLoadWidget>
 }
 
 class GSYPullLoadWidgetControl extends ChangeNotifier {
-
-
   ///数据，对齐增减，不能替换
   List _dataList = new List();
 
