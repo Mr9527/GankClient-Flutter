@@ -5,6 +5,8 @@ import 'package:gankclient/model/article_model.dart';
 import 'package:gankclient/model/refresh_widget_model_delegate.dart';
 import 'package:gankclient/net/address.dart';
 import 'package:gankclient/net/api.dart';
+import 'package:gankclient/page/gank_article_detail/gank_article_detail_page.dart';
+import 'package:gankclient/utils/common_utils.dart';
 import 'package:gankclient/widget/article_list_item.dart';
 import 'package:gankclient/widget/pull/gsy_pull_new_load_widget.dart';
 
@@ -42,6 +44,7 @@ class _CategoryListPageState extends State<CategoryListPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return GSYPullLoadWidget(
         bloc.control(), itemBuilder, onRefresh, onLoadMore);
   }
@@ -50,7 +53,9 @@ class _CategoryListPageState extends State<CategoryListPage>
     return ArticleListItem(
       index: index,
       model: data,
-      onTap: (index, model) {},
+      onTap: (index, model) {
+        CommonUtils.pushPage(context, GankArticleDetailPage(indexModel: model));
+      },
     );
   }
 

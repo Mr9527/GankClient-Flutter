@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gankclient/model/article_model.dart';
@@ -93,11 +94,11 @@ class ArticleListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Image.network(
-                      GankIcons.HOME_AUTHOR_LABEL_ICON_URL,
-                      width: 25.w,
-                      height: 25.w,
-                    ),
+                    Image(
+                        image: ExtendedNetworkImageProvider(
+                            GankIcons.HOME_AUTHOR_LABEL_ICON_URL),
+                        width: 25.w,
+                        height: 25.w),
                     Padding(
                         padding: EdgeInsets.only(left: 10.w, right: 10.w),
                         child: Text(model.author,
@@ -122,14 +123,16 @@ class ArticleListItem extends StatelessWidget {
   _imageItem(BuildContext context, ArticleModel model) {
     if (model.images != null && model.images.length > 0) {
       return Padding(
-          padding: EdgeInsets.only(right: 15.w),
-          child: Image.network(
-            model.images[0],
+        padding: EdgeInsets.only(right: 15.w),
+        child: Image(
+            image: ExtendedNetworkImageProvider(model.images[0]),
             width: 240.w,
-            height: 220.w,
-          ));
+            height: 220.w),
+      );
     } else {
-      return Container();
+      return Container(
+        padding: EdgeInsets.only(left: 10.w),
+      );
     }
   }
 }

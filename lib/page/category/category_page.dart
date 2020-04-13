@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gankclient/page/category/category_list_page.dart';
@@ -79,7 +80,7 @@ class TabLayout extends StatelessWidget {
     var _tabBar = TabBar(
         isScrollable: true,
         //labelPadding: EdgeInsets.all(12.0),
-        labelPadding: EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+        labelPadding: EdgeInsets.only(left: 12.0, right: 12.0),
         indicatorSize: TabBarIndicatorSize.label,
         tabs: _defaultTabList
             .map((CategoryTab page) => Tab(text: page.name))

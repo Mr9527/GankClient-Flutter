@@ -72,8 +72,10 @@ dependencies:
   markdown: ^2.1.3
   # markdown  视图
   flutter_markdown: ^0.3.4
-  # webView 扩张
+  # native webView widget
   flutter_webview_plugin: ^0.3.11
+  # Image 组件扩展
+  extended_image: ^0.7.2
   flutter_localizations:
     sdk: flutter
 
