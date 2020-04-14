@@ -20,9 +20,8 @@ class InformationBloc {
     return true;
   }
 
-
   final GSYPullLoadWidgetControl pullLoadWidgetControl =
-  new GSYPullLoadWidgetControl();
+      new GSYPullLoadWidgetControl();
 
   int page = 1;
 
@@ -42,16 +41,12 @@ class InformationBloc {
   Observable<List<ArticleModel>> get articleList => _articleListSubject;
 
   Future<void> refreshList({int page = 1}) async {
-    if (pullLoadWidgetControl.isLoading) {
-      return;
-    }
     if (page == 1) {
       this.page = 1;
     }
     pullLoadWidgetControl.isLoading = true;
     var res = await httpManager.fetch(API.articleList("Android", page), {});
     if (res != null && res.success) {
-//      _articleListSubject.add(getArticleModelList(res.data));
       var articleModelList = getArticleModelList(res.data);
       if (page == 1 && articleModelList.length > 0) {
         pullLoadWidgetControl.dataList = articleModelList;
@@ -65,16 +60,12 @@ class InformationBloc {
     } else {
       pullLoadWidgetControl.needLoadMore = false;
     }
-    pullLoadWidgetControl.isLoading = false;
   }
 
   ///列表数据
   get dataList => pullLoadWidgetControl.dataList;
 
   requestLoadMore() async {
-    if (pullLoadWidgetControl.isLoading) {
-      return;
-    }
-    refreshList(page: ++page);
+    await refreshList(page: ++page);
   }
 }

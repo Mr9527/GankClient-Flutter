@@ -37,21 +37,23 @@ class ArticleListItem extends StatelessWidget {
   _card(BuildContext context, ArticleModel model) {
     return Container(
         height: 220.w,
-        padding: EdgeInsets.only(top: 10.w, left: 15.w, right: 15.w),
+        padding: EdgeInsets.only(left: 15.w, right: 15.w,top: 15.w),
         child: Material(
             color: Colors.transparent,
-            child: Card(
-                elevation: 1,
-                child: InkWell(
-                  onTap: () {
-                    if (onTap != null) {
-                      onTap(index, model);
-                    }
-                  },
-                  child: Container(
-                      margin: EdgeInsets.all(10.w),
-                      child: _content(context, model)),
-                ))));
+            child: Center(
+              child: Card(
+                  elevation: 1,
+                  child: InkWell(
+                    onTap: () {
+                      if (onTap != null) {
+                        onTap(index, model);
+                      }
+                    },
+                    child: Container(
+                        margin: EdgeInsets.all(10.w),
+                        child: _content(context, model)),
+                  )),
+            )));
   }
 
   _content(BuildContext context, ArticleModel model) => Row(
@@ -101,7 +103,8 @@ class ArticleListItem extends StatelessWidget {
                         height: 25.w),
                     Padding(
                         padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                        child: Text(model.author,
+                        child:
+                        Text(model.author,
                             style: Theme.of(context).textTheme.subhead)),
                     Text("—", style: TextStyle(color: ThemeColors.label)),
                     Padding(padding: EdgeInsets.only(right: 10.w)),

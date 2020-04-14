@@ -238,4 +238,8 @@ class GankIcons {
       const IconData(0xe7d9, fontFamily: GankIcons.FONT_FAMILY);
 
 
+  static const IconData settings =
+      const IconData(0xeb9d, fontFamily: GankIcons.FONT_FAMILY);
+
+
 }

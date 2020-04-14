@@ -102,43 +102,43 @@ class _GSYNestedPullLoadWidgetState extends State<GSYNestedPullLoadWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return new NestedScrollViewRefreshIndicator(
-      ///GlobalKey，用户外部获取RefreshIndicator的State，做显示刷新
-      key: widget.refreshKey,
-      child: NestedScrollView(
-        ///滑动监听
-        controller: widget.scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        headerSliverBuilder: widget.headerSliverBuilder,
-        body: NotificationListener(
-          onNotification: (ScrollNotification notification) {
-            if (notification.metrics.pixels >=
-                notification.metrics.maxScrollExtent) {
-              if (widget.control.needLoadMore) {
-                handleLoadMore();
+    return NestedScrollViewRefreshIndicator(
+        key: widget.refreshKey,
+        child: NestedScrollView(
+          ///滑动监听
+          controller: widget.scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          headerSliverBuilder: widget.headerSliverBuilder,
+          body: NotificationListener(
+            onNotification: (ScrollNotification notification) {
+              if (notification.metrics.pixels >=
+                  notification.metrics.maxScrollExtent) {
+                if (widget.control.needLoadMore) {
+                  handleLoadMore();
+                }
               }
-            }
-            return false;
-          },
-          child: ChangeNotifierProvider<GSYPullLoadWidgetControl>(
-              create: (context) => widget.control,
-              child: Consumer<GSYPullLoadWidgetControl>(
-                  builder: (context, control, _) {
-                return ListView.builder(
-                  itemBuilder: (_, index) {
-                    return _getItem(control, index);
-                  },
+              return false;
+            },
+            child: ChangeNotifierProvider<GSYPullLoadWidgetControl>(
+                create: (context) => widget.control,
+                child: Consumer<GSYPullLoadWidgetControl>(
+                    builder: (context, control, _) {
+                  // 去除 ListView 默认的 20 topPadding
+                  return new MediaQuery.removePadding(
+                      removeTop: true,
+                      context: context,
+                      child: ListView.builder(
+                        itemBuilder: (_, index) {
+                          return _getItem(control, index);
+                        },
 
-                  ///根据状态返回数量
-                  itemCount: _getListCount(control),
-                );
-              })),
+                        ///根据状态返回数量
+                        itemCount: _getListCount(control),
+                      ));
+                })),
+          ),
         ),
-      ),
-
-      ///下拉刷新触发，返回的是一个Future
-      onRefresh: handleRefresh,
-    );
+        onRefresh: handleRefresh);
   }
 
   @protected
@@ -204,26 +204,28 @@ class _GSYNestedPullLoadWidgetState extends State<GSYNestedPullLoadWidget> {
   Widget _buildProgressIndicator() {
     ///是否需要显示上拉加载更多的loading
     Widget bottomWidget = (widget.control.needLoadMore)
-        ? new Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-                ///loading框
-                new SpinKitRotatingCircle(
-                    color: Theme.of(context).primaryColor),
-                new Container(
-                  width: 5.0,
-                ),
-
-                ///加载中文本
-                new Text(
-                  GSYLocalizations.i18n(context).load_more_text,
-                  style: TextStyle(
-                    color: Color(0xFF121917),
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
+        ? Center(
+            child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ///loading框
+                  new SpinKitRotatingCircle(
+                      color: Theme.of(context).primaryColor),
+                  new Container(
+                    width: 5.0,
                   ),
-                )
-              ])
+
+                  ///加载中文本
+                  new Text(
+                    GSYLocalizations.i18n(context).load_more_text,
+                    style: TextStyle(
+                      color: Color(0xFF121917),
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ]),
+          )
 
         /// 不需要加载
         : new Container();
