@@ -12,6 +12,7 @@ import 'package:gankclient/page/information/information_page.dart';
 import 'package:gankclient/page/personal/personal_center_page.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gankclient/widget/draglike/drag_like.dart';
 
 class HomePage extends StatefulWidget {
   static final String sName = "home";
@@ -85,7 +86,8 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _pageChildren() => <Widget>[
         CategoryPage(),
         InformationPage(key: informationPageKey),
-        GirlPage(),
+//        GirlPage(),
+        DragLikePage(),
         PersonalCenterPage(),
       ];
 

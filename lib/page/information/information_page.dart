@@ -7,6 +7,7 @@ import 'package:gankclient/model/article_model.dart';
 import 'package:gankclient/model/banner_model.dart';
 import 'package:gankclient/page/gank_article_detail/gank_article_detail_page.dart';
 import 'package:gankclient/page/information/InformationBloc.dart';
+import 'package:gankclient/page/login/LoginPage.dart';
 import 'package:gankclient/redux/application_state.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:gankclient/utils/common_utils.dart';
@@ -46,7 +47,7 @@ class InformationPageState extends State<InformationPage>
             index: index,
             model: bloc.dataList[index],
             onTap: (index, model) {
-              pushPage(context, GankArticleDetailPage(indexModel: model));
+              pushPage(context, LoginPage());
             },
           );
         } else {

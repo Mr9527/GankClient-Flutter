@@ -6,6 +6,7 @@ import 'package:gankclient/model/banner_model.dart';
 import 'package:gankclient/net/address.dart';
 import 'package:gankclient/net/api.dart';
 import 'package:gankclient/widget/pull/gsy_pull_new_load_widget.dart';
+import 'package:graphql/client.dart';
 import 'package:rxdart/rxdart.dart';
 
 class InformationBloc {
