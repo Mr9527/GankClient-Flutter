@@ -144,7 +144,7 @@ class HomeTabSortBloc {
   BehaviorSubject<List<CategoryTabModel>> _subject =
       BehaviorSubject<List<CategoryTabModel>>();
 
-  Observable<List<CategoryTabModel>> get stream => _subject;
+  Stream<List<CategoryTabModel>> get stream => _subject;
 
   fetchData() async {
     var res = await httpManager.fetch(API.categoryTitleApi("GanHuo"), {});

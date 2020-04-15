@@ -33,7 +33,7 @@ dependencies:
   # 状态共享
   flutter_redux: ^0.6.0
   # stream
-  rxdart: 0.22.3
+  rxdart: 0.23.1
   # 监听网络状态
   connectivity: 0.4.6+1
   # 事件总线
@@ -76,6 +76,8 @@ dependencies:
   flutter_webview_plugin: ^0.3.11
   # Image 组件扩展
   extended_image: ^0.7.2
+  # graphql
+  graphql: ^3.0.0
   flutter_localizations:
     sdk: flutter
 

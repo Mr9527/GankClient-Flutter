@@ -27,7 +27,7 @@ class InformationBloc {
 
   var _subject = PublishSubject<List<BannerModel>>();
 
-  Observable<List<BannerModel>> get stream => _subject;
+  Stream<List<BannerModel>> get stream => _subject;
 
   Future<void> requestRefresh() async {
     var res = await httpManager.fetch(API.banner(), {});
@@ -38,7 +38,7 @@ class InformationBloc {
 
   var _articleListSubject = PublishSubject<List<ArticleModel>>();
 
-  Observable<List<ArticleModel>> get articleList => _articleListSubject;
+  Stream<List<ArticleModel>> get articleList => _articleListSubject;
 
   Future<void> refreshList({int page = 1}) async {
     if (page == 1) {
