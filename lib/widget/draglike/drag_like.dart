@@ -1,23 +1,16 @@
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gankclient/model/girl_element_model.dart';
+import 'package:gankclient/net/address.dart';
+import 'package:gankclient/net/api.dart';
+import 'package:gankclient/page/girl/girl_detail_page.dart';
+import 'package:gankclient/utils/common_utils.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'drag_like_stack.dart';
-
-class Girl {
-  final String description;
-  final String asset;
-
-  Girl(this.description, this.asset);
-}
-
-final List<Girl> girls = [
-  Girl('Sliding to the left means dislike',
-      'http://gank.io/images/8a9837115fb64d22b0484e3d4c4cab50'),
-  Girl('slipping to the right means expressing love',
-      'http://gank.io/images/8a9837115fb64d22b0484e3d4c4cab50'),
-  Girl(
-      'Hope you like', 'http://gank.io/images/8a9837115fb64d22b0484e3d4c4cab50')
-];
 
 class DragLikePage extends StatefulWidget {
   @override
@@ -25,98 +18,49 @@ class DragLikePage extends StatefulWidget {
 }
 
 class DragLikeState extends State<DragLikePage> with TickerProviderStateMixin {
-  AnimationController controller;
+  GirlDragLikeBloc bloc = new GirlDragLikeBloc();
 
-  int aboveIndex = 0;
-  int belowIndex = 1;
-
-  final double bottomHeight = 100.0;
-  final double defaultIconSize = 30.0;
-  final Color defaultIconColor =
-      Color.lerp(Color(0xFFFF80AB), Color(0xFFC51162), 0.0);
-
-  double position = 0.0;
   SlideDirection slideDirection;
-
-  double get leftIconSize => slideDirection == SlideDirection.left
-      ? defaultIconSize * (1 + position * 0.8)
-      : defaultIconSize;
-
-  double get rightIconSize => slideDirection == SlideDirection.right
-      ? defaultIconSize * (1 + position * 0.8)
-      : defaultIconSize;
-
-  Color get leftIconColor => slideDirection == SlideDirection.left
-      ? Color.lerp(Color(0xFFFF80AB), Color(0xFFC51162), position)
-      : defaultIconColor;
-
-  Color get rightIconColor => slideDirection == SlideDirection.right
-      ? Color.lerp(Color(0xFFFF80AB), Color(0xFFC51162), position)
-      : defaultIconColor;
-
-  void setAboveIndex() {
-    if (aboveIndex < girls.length - 1) {
-      aboveIndex++;
-    } else {
-      aboveIndex = 0;
-    }
-  }
-
-  void setBelowIndex() {
-    if (belowIndex < girls.length - 1) {
-      belowIndex++;
-    } else {
-      belowIndex = 0;
-    }
-  }
 
   void onSlide(double position, SlideDirection direction) {
     setState(() {
-      this.position = position;
       this.slideDirection = direction;
     });
   }
 
   void onSlideCompleted() {
-    controller.forward();
-    String isLike =
-        (slideDirection == SlideDirection.left) ? 'dislike' : 'like';
-    Fluttertoast.showToast(msg: "You $isLike this !");
-    setAboveIndex();
+    bloc.slideCompleted();
   }
 
   @override
   void initState() {
     super.initState();
-    controller = new AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 250),
-    )
-      ..addListener(() {
-        setState(() {
-          if (position != 0) {
-            position = 1 - controller.value;
-          }
-        });
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          controller.reset();
-        }
-      });
   }
 
   @override
   void dispose() {
     super.dispose();
-    controller.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    bloc.obtainList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Drag to choose like or dislike'),
+        title: Text('妹纸'),
+        actions: <Widget>[
+          FlatButton(
+              onPressed: () {},
+              child: Icon(
+                Icons.refresh,
+                color: Theme.of(context).cardTheme.color,
+              ))
+        ],
       ),
       body: Container(
         child: Column(
@@ -136,100 +80,87 @@ class DragLikeState extends State<DragLikePage> with TickerProviderStateMixin {
   Widget _buildCard() {
     return Stack(
       children: <Widget>[
-        _buildBackground(),
-        Positioned(
-          child: SlideStack(
-            child: _buildChooseView(girls[aboveIndex]),
-            below: _buildChooseView(girls[belowIndex]),
-            slideDistance: MediaQuery.of(context).size.width - 40.0,
-            onSlide: onSlide,
-            onSlideCompleted: onSlideCompleted,
-            refreshBelow: setBelowIndex,
-            rotateRate: 0.4,
-          ),
-          left: 10.0,
-          top: 20.0,
-          bottom: 40.0,
-          right: 10.0,
-        ),
+        StreamBuilder<List<GirlElementModel>>(
+            stream: bloc.stream,
+            builder: (context, snapshot) {
+              if (snapshot != null && snapshot.data != null) {
+                var list = snapshot.data;
+                return SlideStack(
+                  itemCount: list.length,
+                  itemBuilder: (index, isMask) {
+                    return _renderCard(list[index], isMask);
+                  },
+                  slideDistance: MediaQuery.of(context).size.width - 40.0,
+                  onSlide: onSlide,
+                  onSlideCompleted: onSlideCompleted,
+                  rotateRate: 0.4,
+                );
+              } else {
+                return Container();
+              }
+            })
       ],
     );
   }
 
-  Widget _buildChooseView(Girl girl) {
-    return Stack(
+  Widget _renderCard(GirlElementModel girl, bool isMask) {
+    var card = Column(
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        SizedBox.expand(
-            child: Padding(
-                padding: EdgeInsets.only(bottom: 50),
-                child: Image.network(
-                  girl.asset,
-                  fit: BoxFit.fill,
-                ))),
-        Positioned(
-          child: Text(
-            girl.description,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
+        Expanded(
+            child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+          child: SizedBox.expand(
+            child:
+                isMask ? image(girl) : Hero(tag: girl.url, child: image(girl)),
           ),
-          left: 10.0,
-          right: 10.0,
-          bottom: 10.0,
-        ),
-      ],
-    );
-  }
-
-  Stack _buildBackground() {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          ),
-          left: 30.0,
-          top: 30.0,
-          bottom: 25.0,
-          right: 30.0,
-        ),
-        Positioned(
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          ),
-          left: 20.0,
-          top: 30.0,
-          bottom: 32.0,
-          right: 20.0,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBottom() {
-    return SizedBox(
-      height: bottomHeight,
-      child: Container(
-        padding: EdgeInsets.all(20.0),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-                child: Icon(
-              Icons.favorite_border,
-              size: leftIconSize,
-              color: leftIconColor,
+        )),
+        Padding(
+            padding: EdgeInsets.all(15),
+            child: Text(
+              girl.desc,
+              maxLines: 2,
+              style: TextStyle(
+                  letterSpacing: 2,
+                  wordSpacing: 5,
+                  color: Theme.of(context).textTheme.display2.color,
+                  fontSize: 14),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             )),
-            Expanded(
-                child: Icon(
-              Icons.favorite,
-              size: rightIconSize,
-              color: rightIconColor,
-            ))
-          ],
-        ),
-      ),
+      ],
+    );
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+                builder: (ctx) => GirlDetailPage(girl: girl)));
+      },
+      child: card,
     );
   }
+
+  Image image(GirlElementModel girl) {
+    return Image(
+        image: ExtendedNetworkImageProvider(girl.url), fit: BoxFit.fill);
+  }
+}
+
+class GirlDragLikeBloc {
+  BehaviorSubject<List<GirlElementModel>> _subject =
+      BehaviorSubject<List<GirlElementModel>>();
+
+  Stream<List<GirlElementModel>> get stream => _subject;
+
+  obtainList({int page = 1}) async {
+    var res =
+        await httpManager.fetch(API.categoryList("Girl", "Girl", page, 10), {});
+    if (res != null && res.success) {
+      _subject.add(getGirlElementModelList(res.data));
+    }
+  }
+
+  void slideCompleted() {}
 }

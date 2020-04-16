@@ -6,19 +6,7 @@ import 'package:async/async.dart';
 
 import 'drag_like_stack.dart';
 
-/// Container that can be slid.
-///
-/// Will automatically finish the slide animation when the drag gesture ends.
-class SlideContainer extends StatefulWidget {
-  final Widget child;
-  final double slideDistance;
-
-  final double rotateRate;
-
-  final Duration reShowDuration;
-
-  final double minAutoSlideDragVelocity;
-
+class DragSlideStatusControl {
   final VoidCallback onSlideStarted;
 
   final VoidCallback onSlideCompleted;
@@ -27,18 +15,56 @@ class SlideContainer extends StatefulWidget {
 
   final SlideChanged<double, SlideDirection> onSlide;
 
+  final int itemCount;
+
+  int currentIndex = 0;
+  int belowIndex = 1;
+
+  computerIndex() {
+    if (currentIndex < itemCount - 1) {
+      currentIndex++;
+    } else {
+      currentIndex = 0;
+    }
+  }
+
+  computerBelowIndex() {
+    if (belowIndex < itemCount - 1) {
+      belowIndex++;
+    } else {
+      belowIndex = 0;
+    }
+  }
+
+  DragSlideStatusControl(this.onSlideStarted, this.onSlideCompleted,
+      this.onSlideCanceled, this.onSlide, this.itemCount);
+}
+
+/// Container that can be slid.
+///
+/// Will automatically finish the slide animation when the drag gesture ends.
+class SlideContainer extends StatefulWidget {
+  final Widget Function(int index,bool isMask) itemBuilder;
+
+  final double slideDistance;
+
+  final double rotateRate;
+
+  final Duration reShowDuration;
+
+  final double minAutoSlideDragVelocity;
+
+  final DragSlideStatusControl control;
+
   SlideContainer({
     Key key,
-    @required this.child,
+    @required this.control,
+    @required this.itemBuilder,
     @required this.slideDistance,
     this.rotateRate = 0.25,
     this.minAutoSlideDragVelocity = 600.0,
     this.reShowDuration,
-    this.onSlideStarted,
-    this.onSlideCompleted,
-    this.onSlideCanceled,
-    this.onSlide,
-  })  : assert(child != null),
+  })  : assert(itemBuilder != null),
         assert(rotateRate != null),
         assert(minAutoSlideDragVelocity != null),
         assert(reShowDuration != null),
@@ -57,6 +83,8 @@ class ContainerState extends State<SlideContainer>
 
   // User's finger move value.
   double dragValue = 0.0;
+
+  int stackIndex = 0;
 
   // How long should the container move.
   double dragTarget = 0.0;
@@ -79,14 +107,27 @@ class ContainerState extends State<SlideContainer>
     containerOffset = value;
   }
 
+  static final int completed = 1;
+  static final int side = 2;
+  static final int cancel = 3;
+  int dragStatus = side;
+
   @override
   void initState() {
     animationController =
         AnimationController(vsync: this, duration: widget.reShowDuration)
           ..addListener(() {
-            if (widget.onSlide != null)
-              widget.onSlide(animationController.value, slideDirection);
+            widget.control.onSlide(animationController.value, slideDirection);
             setState(() {});
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed &&
+                dragStatus == completed) {
+              Future.delayed(Duration(milliseconds: 500), () {
+                widget.control.computerBelowIndex();
+                setState(() {});
+              });
+            }
           });
 
     fingerTicker = createTicker((_) {
@@ -149,21 +190,29 @@ class ContainerState extends State<SlideContainer>
     }
   }
 
-  void _completeSlide() => animationController.forward().then((_) {
-        if (widget.onSlideCompleted != null) widget.onSlideCompleted();
-        _startTimer();
-      });
+  void _completeSlide() {
+    dragStatus = completed;
+    widget.control.computerIndex();
+    animationController.forward().then((_) {
+      widget.control.onSlideCompleted();
+      _startTimer();
+    });
+  }
 
-  void _cancelSlide() => animationController.reverse().then((_) {
-        if (widget.onSlideCanceled != null) widget.onSlideCanceled();
-      });
+  void _cancelSlide() {
+    dragStatus = cancel;
+    animationController.reverse().then((_) {
+      widget.control.onSlideCanceled();
+    });
+  }
 
   void handleDragStart(DragStartDetails details) {
+    dragStatus = side;
     isFirstDragFrame = true;
     dragValue = animationController.value * maxDragDistance * dragTarget.sign;
     dragTarget = dragValue;
     fingerTicker.start();
-    if (widget.onSlideStarted != null) widget.onSlideStarted();
+    widget.control.onSlideStarted();
   }
 
   void handleDragUpdate(DragUpdateDetails details) {
@@ -209,7 +258,7 @@ class ContainerState extends State<SlideContainer>
     return Transform(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: widget.child,
+        child: widget.itemBuilder(widget.control.currentIndex,false),
       ),
       transform: transformMatrix,
       alignment: FractionalOffset.center,

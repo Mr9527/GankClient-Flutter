@@ -11,12 +11,6 @@ typedef SlideChanged<double, SlideDirection> = void Function(
     double value, SlideDirection value2);
 
 class SlideStack extends StatefulWidget {
-  /// The main widget.
-  final Widget child;
-
-  /// The widget hidden below.
-  final Widget below;
-
   final double slideDistance;
 
   final double rotateRate;
@@ -36,7 +30,9 @@ class SlideStack extends StatefulWidget {
   /// Called when the drag gesture is canceled (the container goes back to the starting position).
   final VoidCallback onSlideCanceled;
 
-  final VoidCallback refreshBelow;
+  final Widget Function(int index, bool isMask) itemBuilder;
+
+  final int itemCount;
 
   /// Called each time when the slide gesture is active.
   ///
@@ -46,19 +42,18 @@ class SlideStack extends StatefulWidget {
 
   const SlideStack({
     Key key,
-    @required this.child,
-    @required this.below,
+    @required this.itemBuilder,
+    @required this.itemCount,
     @required this.slideDistance,
     this.rotateRate = 0.25,
-    this.scaleRate = 1.08,
+    this.scaleRate = 1.05,
     this.scaleDuration = const Duration(milliseconds: 250),
     this.minAutoSlideDragVelocity = 600.0,
     this.onSlideStarted,
     this.onSlideCompleted,
     this.onSlideCanceled,
     this.onSlide,
-    this.refreshBelow,
-  })  : assert(child != null),
+  })  : assert(itemBuilder != null),
         assert(minAutoSlideDragVelocity != null),
         assert(scaleDuration != null),
         super(key: key);
@@ -72,10 +67,13 @@ class _StackState extends State<SlideStack> with TickerProviderStateMixin {
   double elevation = 0.0;
   AnimationController controller;
   Animation<double> animation;
+  DragSlideStatusControl dragSideController;
 
   @override
   void initState() {
     super.initState();
+    dragSideController = DragSlideStatusControl(onSlideStarted, onCompleted,
+        onSlideCanceled, onSlide, widget.itemCount);
     controller = new AnimationController(
       vsync: this,
       duration: widget.scaleDuration,
@@ -89,7 +87,6 @@ class _StackState extends State<SlideStack> with TickerProviderStateMixin {
               .animateTo(0.0, duration: widget.scaleDuration)
               .whenCompleteOrCancel(() {
             elevation = 0.0;
-            if (widget.refreshBelow != null) widget.refreshBelow();
             setState(() {});
           });
         }
@@ -120,33 +117,82 @@ class _StackState extends State<SlideStack> with TickerProviderStateMixin {
     setState(() {});
   }
 
+  void onCompleted() {}
+
   double get scale => 1 + controller.value * (widget.scaleRate - 1.0);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
+        mask(),
         Positioned.fill(
-            child: Transform.scale(
-              scale: scale,
-              child: Card(
-                elevation: elevation,
-                child: widget.below,
-              ),
-            )),
-        Positioned.fill(
-            child: SlideContainer(
-              child: widget.child,
-              slideDistance: widget.slideDistance,
-              rotateRate: widget.rotateRate,
-              minAutoSlideDragVelocity: widget.minAutoSlideDragVelocity,
-              reShowDuration: widget.scaleDuration,
-              onSlideStarted: onSlideStarted,
-              onSlideCompleted: widget.onSlideCompleted,
-              onSlideCanceled: onSlideCanceled,
-              onSlide: onSlide,
-            )),
+          child: SlideContainer(
+            control: dragSideController,
+            itemBuilder: widget.itemBuilder,
+            slideDistance: widget.slideDistance,
+            rotateRate: widget.rotateRate,
+            minAutoSlideDragVelocity: widget.minAutoSlideDragVelocity,
+            reShowDuration: widget.scaleDuration,
+          ),
+          left: 10.0,
+          top: 20.0,
+          bottom: 40.0,
+          right: 10.0,
+        ),
       ],
     );
+  }
+
+  Positioned mask() {
+    return Positioned.fill(
+        child: Transform.scale(
+            scale: scale,
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                  ),
+                  left: 40.0,
+                  top: 40.0,
+                  bottom: 20.0,
+                  right: 40.0,
+                ),
+                Positioned(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                  ),
+                  left: 30.0,
+                  top: 30.0,
+                  bottom: 25.0,
+                  right: 30.0,
+                ),
+                Positioned(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                  ),
+                  left: 20.0,
+                  top: 30.0,
+                  bottom: 32.0,
+                  right: 20.0,
+                ),
+                Positioned(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    elevation: elevation,
+                    child: widget.itemBuilder(dragSideController.belowIndex,true),
+                  ),
+                  left: 10.0,
+                  top: 20.0,
+                  bottom: 40.0,
+                  right: 10.0,
+                )
+              ],
+            )));
   }
 }

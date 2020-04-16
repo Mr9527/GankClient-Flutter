@@ -3,6 +3,7 @@ import 'package:gankclient/event/http_error_event.dart';
 import 'package:gankclient/event/index.dart';
 
 import 'result_data.dart';
+
 ///错误编码
 class Code {
   ///网络错误
@@ -32,8 +33,7 @@ class Code {
           response.data["code"] != null &&
           response.data["message"] != null) {
         var code = response.data["code"];
-        return ResultData(response.data["data"], code == 1,
-            status: code);
+        return ResultData(response.data["data"], code == 1, status: code);
       }
       return ResultData(response.data, true);
     } else if (response.data is DioError) {
@@ -53,7 +53,8 @@ class Code {
         error.type == DioErrorType.RECEIVE_TIMEOUT) {
       response.statusCode = Code.NETWORK_TIMEOUT;
     }
-    if (response.data["data"] != null &&
+    if (response.data != null &&
+        response.data["data"] != null &&
         response.data["code"] != null &&
         response.data["message"] != null) {
       var code = response.data["code"];
