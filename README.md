@@ -2,7 +2,7 @@
 
 
 
-![welcome](E:\flutter\gank_client\doc\file\welcome.gif)
+![welcome](https://github.com/Mr9527/GankClient-Flutter/blob/master/doc/file/welcome.gif)
 
 
 
