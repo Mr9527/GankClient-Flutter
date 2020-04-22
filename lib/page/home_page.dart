@@ -63,10 +63,10 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(GankIcons.girl),
           activeIcon: Icon(GankIcons.girlFill),
           title: Text("妹纸", style: textStyle)),
-      BottomNavigationBarItem(
+/*      BottomNavigationBarItem(
           icon: Icon(GankIcons.my),
           activeIcon: Icon(GankIcons.myFill),
-          title: Text("我的", style: textStyle)),
+          title: Text("我的", style: textStyle)),*/
     ];
   }
 

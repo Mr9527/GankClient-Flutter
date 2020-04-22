@@ -33,7 +33,9 @@ class _GankArticleDetailPageState extends State<GankArticleDetailPage> {
       body: Builder(builder: (context) {
         return WebView(
           debuggingEnabled: Config.DEBUG,
-          initialUrl: "${API.host}/post/${widget.indexModel.id}",
+          initialUrl: widget.indexModel.id != ""
+              ? "${API.host}/post/${widget.indexModel.id}"
+              : widget.indexModel.url,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
@@ -45,14 +47,10 @@ class _GankArticleDetailPageState extends State<GankArticleDetailPage> {
             print('allowing navigation to $request');
             return NavigationDecision.navigate;
           },
-          onPageStarted: (String url) {
-            print('Page started loading: $url');
-          },
           onPageFinished: (String url) {
             print('Page finished loading: $url');
             _checkCookie();
           },
-          gestureNavigationEnabled: true,
         );
       }),
       floatingActionButton: favoriteButton(),

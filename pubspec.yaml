@@ -14,7 +14,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -41,7 +41,13 @@ dependencies:
   #
   url_launcher: 5.4.1
   # webView
-  webview_flutter: ^0.3.19+9
+#  webview_flutter: ^0.3.19+9
+  # master 版本的 flutter webView 不支持 cookie 的管理，使用分支带有 cookie 的插件
+  webview_flutter:
+    git:
+      url: git://github.com/devangels/plugins.git
+      ref: cookies
+      path: packages/webview_flutter
   # 字体
   google_fonts: 0.3.9
   # toast

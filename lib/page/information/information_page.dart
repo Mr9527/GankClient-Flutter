@@ -8,6 +8,7 @@ import 'package:gankclient/model/banner_model.dart';
 import 'package:gankclient/page/gank_article_detail/gank_article_detail_page.dart';
 import 'package:gankclient/page/information/InformationBloc.dart';
 import 'package:gankclient/page/login/LoginPage.dart';
+import 'package:gankclient/page/web_page/web_view_page.dart';
 import 'package:gankclient/redux/application_state.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:gankclient/utils/common_utils.dart';
@@ -47,7 +48,7 @@ class InformationPageState extends State<InformationPage>
             index: index,
             model: bloc.dataList[index],
             onTap: (index, model) {
-              pushPage(context, LoginPage());
+              showDetail(model);
             },
           );
         } else {
@@ -105,7 +106,10 @@ class InformationPageState extends State<InformationPage>
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            _menuItem("留言板", "quan", () {}),
+            _menuItem("留言板", "quan", () {
+              CommonUtils.pushPage(
+                  context, WebViewPage("https://gank.io/feedback", "留言板"));
+            }),
             _menuItem("看一看", "shusvg", () {}),
             _menuItem("版本进度", "shujubaobiao", () {}),
           ],
@@ -164,11 +168,20 @@ class InformationPageState extends State<InformationPage>
             return BannerWidget(
                 bannerDataList: snapShot.data,
                 looperDuration: Duration(seconds: 5),
-                listener: (model) {});
+                listener: (model) {
+                  var indexModel = ArticleModel("", "", "", "", "", null, 0, "",
+                      0, model.title, "", model.url, 0);
+                  showDetail(indexModel);
+                });
           } else {
             return Container();
           }
         });
+  }
+
+  showDetail(ArticleModel indexModel) {
+    CommonUtils.pushPage(
+        context, GankArticleDetailPage(indexModel: indexModel));
   }
 
   @override

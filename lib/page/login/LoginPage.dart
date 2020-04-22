@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gankclient/net/address.dart';
 import 'package:gankclient/page/web_page/web_view_page.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:gankclient/utils/common_utils.dart';
@@ -194,11 +195,7 @@ class _LoginPageState extends State<LoginPage>
                         child: TextField(
                           controller: loginPasswordController,
                           obscureText: _obscureTextLogin,
-                          style: TextStyle(
-                            fontFamily: "WorkSansSemiBold",
-                            fontSize: 16.0,
-                            color: Colors.black,
-                          ),
+                          style: editTextStyle(),
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               icon: Icon(
@@ -248,7 +245,7 @@ class _LoginPageState extends State<LoginPage>
             padding: EdgeInsets.only(top: 10.0),
             child: FlatButton(
               onPressed: () {
-                CommonUtils.pushPage(context, WebViewPage("https://github.com/login/oauth/authorize?client_id=2d7e4dcd9ee311d6a4ad",""));
+                CommonUtils.goLoginWebView(context, API.authUrl, "授权登录");
               },
               child: Text("Github 授权登录",
                   style: TextStyle(fontSize: 16.0, fontFamily: "WorkSans")),
@@ -380,6 +377,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   functionNotImplement() {
+    Fluttertoast.showToast(msg: "接口未实现，请先使用 Github 授权登录");
   }
 
   TextStyle editTextStyle() {

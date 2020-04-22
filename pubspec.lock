@@ -813,10 +813,12 @@ packages:
   webview_flutter:
     dependency: "direct main"
     description:
-      name: webview_flutter
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.3.19+9"
+      path: "packages/webview_flutter"
+      ref: cookies
+      resolved-ref: c30bce0d8409be62a2dd76ac792cc3c3e532fad3
+      url: "git://github.com/devangels/plugins.git"
+    source: git
+    version: "0.3.16"
   xml:
     dependency: transitive
     description:
@@ -833,4 +835,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.8 <2.0.0"

@@ -1,9 +1,14 @@
+import 'package:gankclient/config/ignoreConfig.dart';
+
 class API {
   ///////////////////////////////////////////////////////////////////////////// Gank //////////////////////////////////////////////////////////
   static const String domain = "https://gank.io";
   static const String host = "https://gank.io";
   static const String apiHost = "https://gank.io/api/v2";
   static const String feedback = "$domain/feedback";
+
+  static const String authUrl =
+      "https://github.com/login/oauth/authorize?client_id=${NetConfig.CLIENT_ID}";
 
   static randomGirlHtmlUrl() => "$host/admin_ajax";
 

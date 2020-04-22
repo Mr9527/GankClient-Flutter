@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gankclient/config/config.dart';
 import 'package:gankclient/local/local_storage.dart';
+import 'package:gankclient/page/login/LoginPage.dart';
 import 'package:gankclient/redux/application_state.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:gankclient/utils/common_utils.dart';
@@ -58,8 +59,9 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
               width: 140.w,
               height: 50.w,
               child: FlatButton(
-                onPressed: () {},
-
+                onPressed: () {
+                  _login();
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.w)),
 //                borderSide: BorderSide(color: Colors.blue),
@@ -116,5 +118,9 @@ class _HomeDrawerPageState extends State<HomeDrawerPage> {
   void readConfig() async {
     var themeStatus = await LocalStorage.get(Config.THEME_COLOR);
     status=int.parse(themeStatus);
+  }
+
+  void _login() {
+    CommonUtils.pushPage(context, LoginPage());
   }
 }

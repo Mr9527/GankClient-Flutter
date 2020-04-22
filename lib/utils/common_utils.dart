@@ -9,6 +9,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gankclient/config/config.dart';
 import 'package:gankclient/local/local_storage.dart';
+import 'package:gankclient/page/web_page/login_webview.dart';
 import 'package:gankclient/style/strings.dart';
 import 'package:gankclient/style/style.dart';
 import 'package:gankclient/utils/navigator_utils.dart';
@@ -259,6 +260,27 @@ class CommonUtils {
 
   static Future<Null> showLoadingDialog(BuildContext context) {
     return null;
+  }
+
+  ///登陆Web页面
+  static Future goLoginWebView(BuildContext context, String url, String title) {
+    return NavigatorRouter(context, new LoginWebView(url, title));
+  }
+
+  ///公共打开方式
+  static NavigatorRouter(BuildContext context, Widget widget) {
+    return Navigator.push(context,
+        new CupertinoPageRoute(builder: (context) => pageContainer(widget)));
+  }
+
+  ///Page页面的容器，做一次通用自定义
+  static Widget pageContainer(widget) {
+    return MediaQuery(
+
+        ///不受系统字体缩放影响
+        data: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+            .copyWith(textScaleFactor: 1),
+        child: widget);
   }
 
   ///弹出 dialog
