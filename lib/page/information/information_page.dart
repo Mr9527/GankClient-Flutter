@@ -8,6 +8,7 @@ import 'package:gankclient/model/banner_model.dart';
 import 'package:gankclient/page/gank_article_detail/gank_article_detail_page.dart';
 import 'package:gankclient/page/information/InformationBloc.dart';
 import 'package:gankclient/page/login/LoginPage.dart';
+import 'package:gankclient/page/random/random_list_page.dart';
 import 'package:gankclient/page/web_page/web_view_page.dart';
 import 'package:gankclient/redux/application_state.dart';
 import 'package:gankclient/style/style.dart';
@@ -110,8 +111,16 @@ class InformationPageState extends State<InformationPage>
               CommonUtils.pushPage(
                   context, WebViewPage("https://gank.io/feedback", "留言板"));
             }),
-            _menuItem("看一看", "shusvg", () {}),
-            _menuItem("版本进度", "shujubaobiao", () {}),
+            _menuItem("看一看", "shusvg", () {
+              CommonUtils.pushPage(context, RandomListPage());
+            }),
+            _menuItem("版本进度", "shujubaobiao", () {
+              CommonUtils.pushPage(
+                  context,
+                  WebViewPage(
+                      "https://github.com/Mr9527/GankClient-Flutter/blob/master/README.md",
+                      "版本进度"));
+            }),
           ],
         ));
   }

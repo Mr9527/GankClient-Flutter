@@ -25,6 +25,9 @@ class API {
   static categoryList(category, subclass, page, count) =>
       "$apiHost/data/category/$category/type/$subclass/page/$page/count/$count";
 
+  static randomList(category, subclass, count) =>
+      "$apiHost/random/category/$category/type/$subclass/count/$count";
+
   static ganHuoList(subclass, page) =>
       categoryList("GanHuo", subclass, page, 10);
 

@@ -5,7 +5,6 @@ class RefreshWidgetModelDelegate<T> {
   final GSYPullLoadWidgetControl pullLoadWidgetControl =
       new GSYPullLoadWidgetControl();
 
-
   int page = 1;
 
   RefreshWidgetModelDelegate(this.fetchData, this.convert);
