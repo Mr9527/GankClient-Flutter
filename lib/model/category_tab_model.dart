@@ -28,7 +28,10 @@ class CategoryTabModel extends Object {
   @JsonKey(name: 'type')
   String type;
 
-  CategoryTabModel(this.id,this.coverImageUrl,this.desc,this.title,this.type,);
+  @JsonKey(name: 'categoryIndex')
+  int categoryIndex;
+
+  CategoryTabModel(this.id,this.coverImageUrl,this.desc,this.title,this.type,this.categoryIndex);
 
   factory CategoryTabModel.fromJson(Map<String, dynamic> srcJson) => _$CategoryTabModelFromJson(srcJson);
 

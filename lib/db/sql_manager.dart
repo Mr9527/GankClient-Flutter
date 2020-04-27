@@ -22,10 +22,7 @@ class SqlManager {
         dbName = user.id.toString() + "_" + _NAME;
       }
     }*/
-    String path = databasesPath + dbName;
-    if (Platform.isIOS) {
-      path = databasesPath + "/" + dbName;
-    }
+    String path = databasesPath + "/" + dbName;
     _database = await openDatabase(path, version: _VERSION,
         onCreate: (Database db, int version) async {
       // When creating the db, create the table

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gankclient/db/category_config_provider.dart';
 import 'package:gankclient/model/category_tab_model.dart';
 import 'package:gankclient/net/address.dart';
 import 'package:gankclient/net/api.dart';
@@ -28,28 +29,32 @@ class _HomeTabSortPageState extends State<HomeTabSortPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar(
-        title: Text("首页展示配置"),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.info_outline),
-              onPressed: () => showTipsDialog(context))
-        ],
-      ),
-      body: Container(
-          child: StreamBuilder<List<CategoryTabModel>>(
-        stream: bloc.stream,
-        builder: (context, snapshot) {
-          if (snapshot != null && snapshot.data != null) {
-            return ReorderableListView(
-                children: _rendererItems(), onReorder: _onReorder);
-          } else {
-            return Container();
-          }
-        },
-      )),
-    );
+    return WillPopScope(
+        child: Scaffold(
+          appBar: MyAppBar(
+            title: Text("首页展示配置"),
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.info_outline),
+                  onPressed: () => showTipsDialog(context))
+            ],
+          ),
+          body: Container(
+              child: StreamBuilder<List<CategoryTabModel>>(
+            stream: bloc.stream,
+            builder: (context, snapshot) {
+              if (snapshot != null && snapshot.data != null) {
+                return ReorderableListView(
+                    children: _rendererItems(), onReorder: _onReorder);
+              } else {
+                return Container();
+              }
+            },
+          )),
+        ),
+        onWillPop: () {
+          return exit();
+        });
   }
 
   void showTipsDialog(BuildContext context) {
@@ -83,7 +88,9 @@ class _HomeTabSortPageState extends State<HomeTabSortPage> {
   Widget _listItemWidget(CategoryTabModel model) {
     return Dismissible(
         direction: DismissDirection.endToStart,
-        onDismissed: (_) {},
+        onDismissed: (_) {
+          removeTab(model);
+        },
         key: ObjectKey(model.id),
         child: Container(
             height: 420.w,
@@ -100,8 +107,24 @@ class _HomeTabSortPageState extends State<HomeTabSortPage> {
             )));
   }
 
-  _rendererItems() {
-    return bloc.list.map((m) => _listItemWidget(m)).toList();
+  List<Widget> _rendererItems() {
+    List<Widget> list = List();
+    for (var i = 0; i < bloc.list.length; i++) {
+      var model = bloc.list[i];
+      model.categoryIndex = i;
+      list.add(_listItemWidget(model));
+    }
+
+    return list;
+  }
+
+  void removeTab(CategoryTabModel model) {
+    bloc.removeTab(model);
+  }
+
+  Future<bool> exit() async {
+    await bloc.saveData();
+    return Future.value(true);
   }
 }
 
@@ -147,10 +170,28 @@ class HomeTabSortBloc {
   Stream<List<CategoryTabModel>> get stream => _subject;
 
   fetchData() async {
-    var res = await httpManager.fetch(API.categoryTitleApi("GanHuo"), {});
-    if (res != null && res.success) {
-      list = getCategoryTabModelList(res.data);
+    CategoryConfigProvider provider = new CategoryConfigProvider();
+    var dbList = await provider.getData();
+    if (dbList != null) {
+      list.clear();
+      list.addAll(dbList);
       _subject.add(list);
     }
+    var res = await httpManager.fetch(API.categoryTitleApi("GanHuo"), {});
+    if (res != null && res.success) {
+      list.clear();
+      list = getCategoryTabModelList(res.data);
+      _subject.add(list);
+      saveData();
+    }
   }
+
+  saveData() async {
+    CategoryConfigProvider provider = new CategoryConfigProvider();
+    for (var model in list) {
+      provider.insert(model);
+    }
+  }
+
+  void removeTab(CategoryTabModel model) {}
 }

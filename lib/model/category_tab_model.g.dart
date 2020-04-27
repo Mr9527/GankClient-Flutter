@@ -13,6 +13,7 @@ CategoryTabModel _$CategoryTabModelFromJson(Map<String, dynamic> json) {
     json['desc'] as String,
     json['title'] as String,
     json['type'] as String,
+    json['categoryIndex'] as int,
   );
 }
 
@@ -23,4 +24,5 @@ Map<String, dynamic> _$CategoryTabModelToJson(CategoryTabModel instance) =>
       'desc': instance.desc,
       'title': instance.title,
       'type': instance.type,
+      'categoryIndex': instance.categoryIndex,
     };
